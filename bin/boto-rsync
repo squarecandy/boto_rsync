@@ -450,7 +450,6 @@ def main():
             
             try:
                 keys = {}
-                
                 for key in b.list(prefix=cloud_path):
                     if no_recurse and '/' in key.name[len(cloud_path):]:
                         continue
@@ -569,7 +568,7 @@ def main():
                                     fullpath[len(path):].lstrip(os.sep)
                                     )
                             continue
-                        
+                     
                     sys.stdout.write(
                         '%s\n' %
                         fullpath[len(path):].lstrip(os.sep)
