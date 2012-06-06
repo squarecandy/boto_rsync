@@ -450,6 +450,7 @@ def main():
             
             try:
                 keys = {}
+                
                 for key in b.list(prefix=cloud_path):
                     if no_recurse and '/' in key.name[len(cloud_path):]:
                         continue
@@ -484,6 +485,8 @@ def main():
                     else:
                         key_name = cloud_path + get_key_name(root, path) + '/'
                     
+                    key_name = key_name.decode('utf-8')
+
                     if ignore_empty and not files:
                         if not quiet:
                             sys.stdout.write(
@@ -539,7 +542,7 @@ def main():
                         continue
                     
                     fullpath = os.path.join(root, file)
-                    key_name = cloud_path + get_key_name(fullpath, path)
+                    key_name = (cloud_path + get_key_name(fullpath, path)).decode('utf-8')
                     file_size = os.path.getsize(fullpath)
                     
                     if file_size == 0:
@@ -566,7 +569,7 @@ def main():
                                     fullpath[len(path):].lstrip(os.sep)
                                     )
                             continue
-                    
+                        
                     sys.stdout.write(
                         '%s\n' %
                         fullpath[len(path):].lstrip(os.sep)
@@ -607,6 +610,7 @@ def main():
                     for file in files:
                         fullpath = os.path.join(root, file)
                         key_name = cloud_path + get_key_name(fullpath, path)
+                        key_name = key_name.decode('utf-8')
                         if key_name in keys:
                             del(keys[key_name])
                     
@@ -618,6 +622,7 @@ def main():
                             key_name = cloud_path + get_key_name(root, path) + \
                                        '/'
                         
+                        key_name = key_name.decode('utf-8')
                         if key_name in keys:
                             del(keys[key_name])
                 
