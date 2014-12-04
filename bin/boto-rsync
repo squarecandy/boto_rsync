@@ -210,6 +210,10 @@ def main():
              '"host" connection argument (S3 only).'
         )
     parser.add_argument(
+        '--exclude', action='append', default=[],
+        help='Exclude files matching the specified pattern.'
+        )
+    parser.add_argument(
         '-g', '--grant',
         help='A canned ACL policy that will be granted on each file ' + \
              'transferred to S3/GS. The value provided must be one of the ' + \
@@ -313,6 +317,7 @@ def main():
         cloud_secret_access_key = args.cloud_secret_access_key
         anon = args.anon
         endpoint = args.endpoint
+        exclude = args.exclude
         grant = args.grant
         metadata = args.metadata
         if not isinstance(metadata, dict):
@@ -543,6 +548,23 @@ def main():
                     fullpath = os.path.join(root, file)
                     key_name = (cloud_path + get_key_name(fullpath, path)).decode('utf-8')
                     file_size = os.path.getsize(fullpath)
+                    
+                    # determine if the file should be excluded according to command line arguments.
+                    excludeFile = False
+                    for excludePath in exclude:
+                        if fullpath.startswith(excludePath):
+                            excludeFile = True
+                            continue
+                        elif fullpath[len(path):].lstrip(os.sep).startswith(excludePath):
+                            excludeFile = True
+                            continue
+                    if excludeFile:
+                        sys.stdout.write(
+                            'Skipping %s (excluded path)\n' %
+                            fullpath[len(path):].lstrip(os.sep)
+                        )
+                        continue
+                    
                     
                     if file_size == 0:
                         if ignore_empty:
