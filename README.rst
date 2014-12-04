@@ -66,6 +66,9 @@ or::
 or::
 
     boto-rsync [OPTIONS] s3://bucketname/ s3://another_bucket/
+    
+
+@squarecandy - I added an example directory that has a bash script for backing up a all the directories within another specified directory    
 
 
 Options
